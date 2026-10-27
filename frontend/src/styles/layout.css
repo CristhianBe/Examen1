@@ -1,42 +1,354 @@
-/* =========================================================================
-   TODO [F5] Maquetación responsiva (mobile first)
 
-   Requisitos:
-   1. .layout
-      - Ancho máximo de 1200px, centrado, con margen interior de 1rem.
-      - En pantallas pequeñas: una sola columna (formulario arriba, listado abajo).
-      - Desde 900px: dos columnas con CSS Grid — formulario de 320px y listado
-        con el resto del espacio. Separación entre columnas de 1.5rem.
-   2. .panel-form
-      - Desde 900px debe quedarse fijo al desplazarse (position: sticky),
-        alineado al inicio de su celda.
-   3. .lista-equipos
-      - Sin viñetas, sin margen ni relleno por omisión.
-      - CSS Grid con tantas columnas como quepan, cada una de mínimo 220px
-        (sin media query: use auto-fill y minmax).
-   4. .barra-listado y .paginacion
-      - Flexbox: elementos en los extremos y centrados verticalmente.
-      - La barra puede pasar a dos líneas si no cabe.
-   5. Ningún elemento debe provocar desplazamiento horizontal a 360px de ancho.
-   ========================================================================= */
 
 .layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr); 
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: 1rem;
 }
 
-.panel-form {
-}
-
+.panel-form,
 .panel-listado {
+  min-width: 0;
 }
 
 .barra-listado {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem 1rem;
 }
 
 .lista-equipos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr));
+  gap: 1rem;
+}
+
+.lista-equipos .vacio {
+  grid-column: 1 / -1;
 }
 
 .paginacion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
 }
 
 @media (min-width: 900px) {
+  .layout {
+    grid-template-columns: 320px 1fr;
+    align-items: start;
+  }
+
+  .panel-form {
+    position: sticky;
+    top: 1rem;
+    align-self: start;
+  }
+}
+
+/* ===================== Apariencia ===================== */
+
+body {
+  background-color: #f8fafc;
+  background-image:
+    radial-gradient(circle at 10% 15%, rgba(0, 180, 216, 0.22), transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(167, 139, 250, 0.22), transparent 45%),
+    radial-gradient(circle at 80% 85%, rgba(52, 211, 153, 0.18), transparent 45%),
+    radial-gradient(circle at 15% 90%, rgba(251, 191, 36, 0.16), transparent 40%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+.app-header {
+  background-color: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-borde);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 0.875rem 1.5rem;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.marca-sigla {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, var(--color-primario), var(--color-acento));
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.875rem;
+}
+
+.sesion {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--color-texto-suave);
+  font-size: 0.875rem;
+}
+
+.card,
+.panel-form,
+.form-login {
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--color-borde);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.panel-form h2,
+.form-login h2,
+.panel-listado h2 {
+  margin-top: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin-bottom: 1.125rem;
+}
+
+.campo label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.campo input,
+.campo select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  background-color: #ffffff;
+  border: 1px solid var(--color-borde);
+  border-radius: 0.5rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.campo input:focus,
+.campo select:focus {
+  outline: none;
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.15);
+}
+
+.campo [aria-invalid="true"] {
+  border-color: var(--color-peligro);
+  box-shadow: 0 0 0 1px var(--color-peligro);
+}
+
+.error-campo {
+  font-size: 0.75rem;
+  color: var(--color-peligro);
+  font-weight: 500;
+  margin: 0;
+}
+
+.barra-listado {
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.resumen,
+.pagina-actual {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-texto-suave);
+}
+
+.paginacion {
+  margin-top: 1.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-borde);
+}
+
+.lista-equipos {
+  transition: opacity 0.2s ease;
+}
+
+.lista-equipos[aria-busy="true"] {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.tarjeta {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--color-borde);
+  border-radius: 0.75rem;
+  padding: 1.125rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.tarjeta:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-primario);
+  box-shadow: 0 6px 16px -2px rgba(0, 0, 0, 0.08);
+}
+
+.tarjeta-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.codigo {
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: ui-monospace, Consolas, monospace;
+  color: var(--color-texto-suave);
+  background-color: var(--color-fondo);
+  padding: 0.2rem 0.45rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--color-borde);
+}
+
+.estado {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: 9999px;
+}
+
+.estado[data-estado="disponible"] {
+  background-color: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.estado[data-estado="prestado"] {
+  background-color: #fffbeb;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.estado[data-estado="mantenimiento"] {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.nombre {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+
+.categoria,
+.fecha {
+  font-size: 0.8125rem;
+  color: var(--color-texto-suave);
+  margin: 0 0 0.35rem;
+}
+
+.fecha {
+  margin-bottom: 1rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-primario);
+  outline-offset: 2px;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-primario {
+  width: 100%;
+  background: linear-gradient(135deg, var(--color-primario), var(--color-acento));
+  color: #ffffff;
+  border: none;
+}
+
+.btn-primario:hover:not(:disabled) {
+  background: var(--color-primario-oscuro);
+}
+
+.btn-peligro {
+  margin-top: auto;
+  align-self: flex-start;
+  background-color: #fff1f2;
+  color: var(--color-peligro);
+  border: 1px solid #fecdd3;
+  font-size: 0.75rem;
+  padding: 0.35rem 0.75rem;
+}
+
+.btn-peligro:hover:not(:disabled) {
+  background-color: var(--color-peligro);
+  color: #ffffff;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.vacio {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: var(--color-texto-suave);
+  border: 1px dashed var(--color-borde);
+  border-radius: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.vista-login {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.form-login {
+  width: 100%;
+  max-width: 380px;
 }
